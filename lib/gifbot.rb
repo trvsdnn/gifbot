@@ -1,4 +1,5 @@
 require 'cgi'
+require 'uri'
 require 'open-uri'
 require 'cinch'
 require 'nokogiri'
@@ -43,7 +44,7 @@ module GifBot
         end
         
         def image_url_from_page(page)
-          GIFBIN_URL + page.xpath('//div[@class="box"]//img[@class="gif"]').first['src']
+          URI.escape(GIFBIN_URL + page.xpath('//div[@class="box"]//img[@class="gif"]').first['src'])
         end
       end
       
