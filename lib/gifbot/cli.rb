@@ -16,6 +16,14 @@ module GifBot
           opts.on('--server [HOST]', 'Set the server to connect to') do |server|
             @options[:server] = server unless server.nil?
           end
+          
+          opts.on('--port [PORT]', 'Set the server port to connect to') do |port|
+            @options[:port] = port unless port.nil?
+          end
+          
+          opts.on('--ssl', 'Connect with ssl') do |ssl|
+            @options[:ssl] = ssl unless ssl.nil?
+          end
 
           opts.on('--nick [NICK]', 'Set gifbot\'s nickname') do |nick|
             @options[:nick] = nick unless nick.nil?

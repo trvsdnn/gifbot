@@ -15,6 +15,8 @@ module GifBot
         c.server   = options[:server]
         c.nick     = options[:nick]
         c.channels = options[:channels]
+        c.port = options[:port] if options[:port]
+        c.ssl.use = options[:ssl] if options[:ssl]
       end
       
       helpers do
