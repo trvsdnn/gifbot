@@ -46,7 +46,7 @@ module GifBot
         end
         
         def image_url_from_page(page)
-          URI.escape(GIFBIN_URL + page.xpath('//div[@class="box"]//img[@class="gif"]').first['src'])
+          URI.escape(page.xpath('//div[@class="box"]//img[@class="gif"]').first['src'])
         end
       end
       
