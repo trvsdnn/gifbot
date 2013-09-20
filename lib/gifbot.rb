@@ -41,9 +41,18 @@ module GifBot
       on :message, /^?gifme (.+)/ do  |m, query|
         m.reply search(query)
       end
-      
+
       on :action, /(\w+\s*){3}/ do  |m, query|
         m.reply "#{m.user.nick} right now: #{search(query)}"
+      end
+
+      on :message, /^?help/ do  |m|
+        help = "For a good time,
+        - ?randomgif
+        - ?gifme searchstring
+        - /me reaction (only the first 3 words are used to search)"
+
+        m.reply help
       end
 
     end
