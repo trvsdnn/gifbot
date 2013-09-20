@@ -2,13 +2,11 @@ require 'cgi'
 require 'uri'
 require 'open-uri'
 require 'cinch'
-require 'nokogiri'
+require 'giphy'
 require 'gifbot/cli'
 require 'gifbot/version'
 
 module GifBot
-  GIFBIN_URL = 'http://www.gifbin.com'
-  
   def self.connect(options={})
     bot = Cinch::Bot.new do
       configure do |c|
@@ -21,32 +19,18 @@ module GifBot
       
       helpers do
         def search(query)
-          query   = CGI.escape(query)
-          gifs    = []
-          results = Nokogiri::HTML( open("#{GIFBIN_URL}/search/#{query}/") )
-          
-          results.xpath('//div[@class="thumbs"]//a').each do |a|
-            gifs << a['href'].sub(/^\//, '')
-          end
+          query   = CGI.escape(query).gsub("+","-")
+          gifs    = Giphy.search("#{query}", {limit: 100})
           
           if gifs.empty?
-            "damn, no gif for \"#{query}\""
+            "The internet has failed us. No gif for \"#{query}\"!"
           else
-            id = gifs[rand(gifs.length)]
-            page = Nokogiri::HTML( open("#{GIFBIN_URL}/#{id}") )
-
-            image_url_from_page(page)
+            gifs[rand(gifs.length)].original_image.url
           end
         end
         
         def random
-          page = Nokogiri::HTML(open("#{GIFBIN_URL}/random"))
-          
-          image_url_from_page(page)
-        end
-        
-        def image_url_from_page(page)
-          URI.escape(page.xpath('//img[@id="gif"]').first['src'])
+          Giphy.random().image_original_url
         end
       end
       

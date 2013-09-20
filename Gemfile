@@ -1,7 +1,7 @@
 source "http://rubygems.org"
 
 gem 'cinch'
-gem 'nokogiri'
+gem 'giphy'
 
 # Specify your gem's dependencies in gifbot.gemspec
 gemspec
