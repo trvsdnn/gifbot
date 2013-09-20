@@ -25,7 +25,7 @@ module GifBot
           gifs    = []
           results = Nokogiri::HTML( open("#{GIFBIN_URL}/search/#{query}/") )
           
-          results.xpath('//div[@class="thumb-cell"]//a').each do |a|
+          results.xpath('//div[@class="thumbs"]//a').each do |a|
             gifs << a['href'].sub(/^\//, '')
           end
           
@@ -46,7 +46,7 @@ module GifBot
         end
         
         def image_url_from_page(page)
-          URI.escape(page.xpath('//div[@class="box"]//img[@class="gif"]').first['src'])
+          URI.escape(page.xpath('//img[@id="gif"]').first['src'])
         end
       end
       
