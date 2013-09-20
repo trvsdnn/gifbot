@@ -42,6 +42,10 @@ module GifBot
         m.reply search(query)
       end
       
+      on :action, /(\w+\s*){3}/ do  |m, query|
+        m.reply "#{m.user.nick} right now: #{search(query)}"
+      end
+
     end
     
     bot.start
