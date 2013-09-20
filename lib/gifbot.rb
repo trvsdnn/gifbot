@@ -25,12 +25,12 @@ module GifBot
           if gifs.empty?
             "The internet has failed us. No gif for \"#{query}\"!"
           else
-            gifs[rand(gifs.length)].original_image.url
+            gifs.sample.original_image.url
           end
         end
         
         def random
-          Giphy.random().image_original_url
+          Giphy.random.image_original_url
         end
       end
       

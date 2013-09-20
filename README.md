@@ -1,5 +1,5 @@
 ## HUH?
-My cute little gif slinging irc bot for [http://whyday.org/](whyday). Gifs courtesy of [http://www.gifbin.com](gifbin)
+My cute little gif slinging irc bot for [http://whyday.org/](whyday). Gifs courtesy of [http://www.giphy.com/](giphy)
 
 Requires ruby >= 1.9.1
 
@@ -13,11 +13,11 @@ Requires ruby >= 1.9.1
     
     # a dancing gif
     <blahed> ?gifme dancing
-    <gifbot> http://www.gifbin.com/bin/11825gh64404673.gif
+    <gifbot> http://media.giphy.com/media/ddOokp54QECd2/giphy.gif
     
     # a random gif
     <blahed> ?randomgif
-    <gifbot> http://www.gifbin.com/bin/072009/1246556808_Missile_launch_fail.gif
+    <gifbot> http://media.giphy.com/media/ZuAoPnVw3R6Yo/giphy.gif
   
   
   
