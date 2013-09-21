@@ -7,10 +7,8 @@ require 'gifbot/cli'
 require 'gifbot/version'
 
 module GifBot
-
   def self.connect(options={})
-    action = true
-
+    action = options[:action]
     bot = Cinch::Bot.new do
       configure do |c|
         c.server   = options[:server]
