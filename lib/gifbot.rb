@@ -7,7 +7,10 @@ require 'gifbot/cli'
 require 'gifbot/version'
 
 module GifBot
+
   def self.connect(options={})
+    action = true
+
     bot = Cinch::Bot.new do
       configure do |c|
         c.server   = options[:server]
@@ -43,16 +46,25 @@ module GifBot
       end
 
       on :action, /(\w+\s*\w*\s*\w*)/ do  |m, query| 
-        m.reply "#{m.user.nick} right now: #{search(query)}"
+        if action
+          m.reply "#{m.user.nick} right now: #{search(query)}"
+        end
       end
 
       on :message, /^?help/ do  |m|
         help = "For a good time,
         - ?randomgif
-        - ?gifme searchstring
-        - /me reaction (only the first 3 words are used to search)"
+        - ?gifme search string
+        - /me action description
+            - Toggle with ?action
+            - Only the first 3 words of the action are used to search"
 
         m.reply help
+      end
+
+      on :message, /^?action/ do  |m|
+        action = !action
+        m.reply "Action gifs are now #{action ? 'enabled' : 'disabled'}"
       end
 
     end
