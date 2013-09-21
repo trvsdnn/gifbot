@@ -21,25 +21,15 @@ module GifBot
       helpers do
         def search(query)
           query   = CGI.escape(query).gsub("+","-")
-          gifs    = Giphy.search("#{query}", {limit: 100})
-          
-          if gifs.empty?
-            "The internet has failed us. No gif for \"#{query}\"!"
-          else
-            gifs.sample.original_image.url
+          begin
+            Giphy.screensaver("#{query}").image_original_url
+          rescue
+            query.nil? ? "Unable to retrieve a random gif from giphy!" : "The internet has failed us. No gif for \"#{query}\"!"
           end
         end
-        
-        def random
-          Giphy.random.image_original_url
-        end
       end
       
-      on :message, /^?randomgif/ do |m|
-        m.reply random
-      end
-      
-      on :message, /^?gifme (.+)/ do  |m, query|
+      on :message, /^?gifme\s*(.*)/ do  |m, query|
         m.reply search(query)
       end
 
@@ -51,9 +41,9 @@ module GifBot
 
       on :message, /^?help/ do  |m|
         help = "For a good time,
-        - ?randomgif
-        - ?gifme search string
-        - /me action description
+        - ?gifme
+            - Provide a search string, or leave blank for a random gif!
+        - /me
             - Toggle with ?action
             - Only the first 3 words of the action are used to search"
 
