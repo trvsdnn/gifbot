@@ -8,6 +8,7 @@ require 'gifbot/version'
 
 module GifBot
   def self.connect(options={})
+    action = options[:action]
     bot = Cinch::Bot.new do
       configure do |c|
         c.server   = options[:server]
@@ -20,28 +21,40 @@ module GifBot
       helpers do
         def search(query)
           query   = CGI.escape(query).gsub("+","-")
-          gifs    = Giphy.search("#{query}", {limit: 100})
-          
-          if gifs.empty?
-            "The internet has failed us. No gif for \"#{query}\"!"
-          else
-            gifs.sample.original_image.url
+          begin
+            Giphy.screensaver("#{query}").image_original_url
+          rescue
+            query.nil? ? "Unable to retrieve a random gif from giphy!" : "The internet has failed us. No gif for \"#{query}\"!"
           end
         end
-        
-        def random
-          Giphy.random.image_original_url
-        end
       end
       
-      on :message, /^?randomgif/ do |m|
-        m.reply random
-      end
-      
-      on :message, /^?gifme (.+)/ do  |m, query|
+      on :message, /^?gifme\s*(.*)/ do  |m, query|
         m.reply search(query)
       end
-      
+
+      on :action, /(\w+\s*\w*\s*\w*)/ do  |m, query| 
+        if action
+          m.reply "#{m.user.nick} right now: #{search(query)}"
+        end
+      end
+
+      on :message, /^?help/ do  |m|
+        help = "For a good time,
+        - ?gifme
+            - Provide a search string, or leave blank for a random gif!
+        - /me
+            - Toggle with ?action
+            - Only the first 3 words of the action are used to search"
+
+        m.reply help
+      end
+
+      on :message, /^?action/ do  |m|
+        action = !action
+        m.reply "Action gifs are now #{action ? 'enabled' : 'disabled'}"
+      end
+
     end
     
     bot.start

@@ -8,7 +8,7 @@ module GifBot
         @options = {}
 
         opts = OptionParser.new do |opts|
-          opts.banner = "Usage: gifbot [options]\n\nExample: gifbot --server=irc.freenode.net --nick=gifbot --channels=ruby,rails"
+          opts.banner = "Usage: gifbot [options]\n\nExample: gifbot --server=irc.freenode.net --nick=gifbot --channels=ruby,rails --enableActions"
 
           opts.separator ''
           opts.separator 'Options:'
@@ -31,6 +31,10 @@ module GifBot
 
           opts.on('--channels [CHANNELS]', 'Tell gifbot what channels to connect to (comma seperated, without hash)') do |channels|
             @options[:channels] = channels.split(',').map{ |c| '#' + c } unless channels.nil?
+          end
+
+          opts.on('--enableActions', 'Tell gifbot to respond to /me actions') do |action|
+            @options[:action] = action.nil? ? false : true
           end
 
           opts.on( '-h', '--help', 'Display this help' ) do
