@@ -19,5 +19,5 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   
   s.add_dependency('cinch', ['>= 0'])
-  s.add_dependency('nokogiri', ['>= 0'])
+  s.add_dependency('giphy', ['>= 0'])
 end

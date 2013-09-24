@@ -2,14 +2,13 @@ require 'cgi'
 require 'uri'
 require 'open-uri'
 require 'cinch'
-require 'nokogiri'
+require 'giphy'
 require 'gifbot/cli'
 require 'gifbot/version'
 
 module GifBot
-  GIFBIN_URL = 'http://www.gifbin.com'
-  
   def self.connect(options={})
+    action = options[:action]
     bot = Cinch::Bot.new do
       configure do |c|
         c.server   = options[:server]
@@ -21,43 +20,41 @@ module GifBot
       
       helpers do
         def search(query)
-          query   = CGI.escape(query)
-          gifs    = []
-          results = Nokogiri::HTML( open("#{GIFBIN_URL}/search/#{query}/") )
-          
-          results.xpath('//div[@class="thumb-cell"]//a').each do |a|
-            gifs << a['href'].sub(/^\//, '')
+          query   = CGI.escape(query).gsub("+","-")
+          begin
+            Giphy.screensaver("#{query}").image_original_url
+          rescue
+            query.nil? ? "Unable to retrieve a random gif from giphy!" : "The internet has failed us. No gif for \"#{query}\"!"
           end
-          
-          if gifs.empty?
-            "damn, no gif for \"#{query}\""
-          else
-            id = gifs[rand(gifs.length)]
-            page = Nokogiri::HTML( open("#{GIFBIN_URL}/#{id}") )
-
-            image_url_from_page(page)
-          end
-        end
-        
-        def random
-          page = Nokogiri::HTML(open("#{GIFBIN_URL}/random"))
-          
-          image_url_from_page(page)
-        end
-        
-        def image_url_from_page(page)
-          URI.escape(page.xpath('//div[@class="box"]//img[@class="gif"]').first['src'])
         end
       end
       
-      on :message, /^?randomgif/ do |m|
-        m.reply random
-      end
-      
-      on :message, /^?gifme (.+)/ do  |m, query|
+      on :message, /^\?gifme\s*(.*)/ do  |m, query|
         m.reply search(query)
       end
-      
+
+      on :action, /(\w+\s*\w*\s*\w*)/ do  |m, query| 
+        if action
+          m.reply "#{m.user.nick} right now: #{search(query)}"
+        end
+      end
+
+      on :message, /^\?help/ do  |m|
+        help = "For a good time,
+        - ?gifme
+            - Provide a search string, or leave blank for a random gif!
+        - /me
+            - Toggle with ?action
+            - Only the first 3 words of the action are used to search"
+
+        m.reply help
+      end
+
+      on :message, /^\?action/ do  |m|
+        action = !action
+        m.reply "Action gifs are now #{action ? 'enabled' : 'disabled'}"
+      end
+
     end
     
     bot.start
