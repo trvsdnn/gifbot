@@ -29,7 +29,7 @@ module GifBot
         end
       end
       
-      on :message, /^?gifme\s*(.*)/ do  |m, query|
+      on :message, /^\?gifme\s*(.*)/ do  |m, query|
         m.reply search(query)
       end
 
@@ -39,7 +39,7 @@ module GifBot
         end
       end
 
-      on :message, /^?help/ do  |m|
+      on :message, /^\?help/ do  |m|
         help = "For a good time,
         - ?gifme
             - Provide a search string, or leave blank for a random gif!
@@ -50,7 +50,7 @@ module GifBot
         m.reply help
       end
 
-      on :message, /^?action/ do  |m|
+      on :message, /^\?action/ do  |m|
         action = !action
         m.reply "Action gifs are now #{action ? 'enabled' : 'disabled'}"
       end
